@@ -3,7 +3,7 @@
 	<head>
 		<meta charset="UTF-8">
 		<title>
-			{% block title %}Welcome!
+			{% block title %}Bienvenue dans notre site de recettes!
 			{% endblock %}
 		</title>
 		{# Run `composer require symfony/webpack-encore-bundle`
@@ -19,7 +19,7 @@
 	</head>
 	<body>
 		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-			<a class="navbar-brand" href="#">Recettes</a>
+			<a class="navbar-brand" href="/recipes">Recettes</a>
 			<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
 				<span class="navbar-toggler-icon"></span>
 			</button>
@@ -27,13 +27,13 @@
 			<div class="collapse navbar-collapse" id="navbarColor01">
 				<ul class="navbar-nav mr-auto">
 					<li class="nav-item">
-						<a class="nav-link" href="#">Catégories</a>
+						<a class="nav-link" href="/categories">Catégories</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Mes favoris</a>
+						<a class="nav-link" href="/favorites">Mes favoris</a>
 					</li>
 					<li class="nav-item">
-						<a class="nav-link" href="#">Ajoutez une recette</a>
+						<a class="nav-link" href="/add">Ajoutez une recette</a>
 					</li>
 				</ul>
 			</div>

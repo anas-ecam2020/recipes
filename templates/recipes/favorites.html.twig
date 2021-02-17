@@ -1,11 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Recettes
+{% block title %}Favoris
 {% endblock %}
 
 {% block body %}
 
-	{% for recipe in recipes %}
+{% for recipe in recipes %}
+{% if recipe.favorite == true %}
 		<br>
 		<article>
 			<h3>{{ recipe.title }}</h3>
@@ -19,7 +20,7 @@
 			</div>
 		</article>
 		<br>
+{% endif %}
+{% endfor %}
 
-	{% endfor %}
 {% endblock %}
-
