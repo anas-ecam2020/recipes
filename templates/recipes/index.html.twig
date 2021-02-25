@@ -14,6 +14,7 @@
 				{{recipe.createdAt | date('d/m/Y') }}
 				à
 				{{recipe.createdAt | date('H:i') }}</div>
+				<br>
 			<div class="content">
 				<img src="{{ recipe.image }}" width="350" length="150" alt=""><br><br>
 				<a href="{{ path('recipe_show', {'id':recipe.id}) }}" class="btn btn-primary">Consulter la recette</a>

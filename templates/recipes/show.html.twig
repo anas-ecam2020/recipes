@@ -1,6 +1,7 @@
 {% extends "base.html.twig" %}
 
-{% block title %} {{ recipe.title }}
+{% block title %}
+	{{ recipe.title }}
 {% endblock %}
 
 
@@ -8,30 +9,41 @@
 
 	<br>
 	<article>
-		<h3>{{ recipe.title }}</h3>
+		<div class="row">
+			<div class="column">
+				<h3>{{ recipe.title }} &nbsp;</h3>
+			</div>
+			<div class="column">
+				<a href="{{ path('recipe_edit', {'id':recipe.id}) }}" class="btn btn-primary">
+					Modifier la recette
+				</a>
+			</div>
+		</div>
 		<div class="metadata">Ecrit le
 			{{recipe.createdAt | date('d/m/Y') }}
 			à
-			{{recipe.createdAt | date('H:i') }}</div><br>
+			{{recipe.createdAt | date('H:i') }}</div>
+		<br>
 		<div class="content">
 			<img src="{{ recipe.image }}" width="350" length="150" alt=""><br><br>
 		</div>
 		<h5>Description recette :</h5>
-        <div>
-            {{ recipe.content }}
-        </div>
-        <br>
+		<div>
+			{{ recipe.content }}
+		</div>
+		<br>
 		<div>
 			<h5>Difficulté :</h5>
-				<p>{{ recipe.difficulty }}</p>
+			<p>{{ recipe.difficulty }}</p>
 		</div>
 		<div>
 			<h5>Portions :</h5>
-				<p>{{ recipe.portions }}</p>
+			<p>{{ recipe.portions }}</p>
 		</div>
-        		<div>
+		<div>
 			<h5>Temps de préparation :</h5>
-				<p>{{ recipe.time }} minutes</p>
+			<p>{{ recipe.time }}
+				minutes</p>
 		</div>
 	</article>
 	<br>
