@@ -4,9 +4,10 @@
 {% endblock %}
 
 {% block body %}
-
+	<br>
+	<h1>Les recettes pour tous!</h1>
+	<br>
 	{% for recipe in recipes %}
-		<br>
 		<article>
 			<h3>{{ recipe.title }}</h3>
 			<div class="metadata">Ecrit le

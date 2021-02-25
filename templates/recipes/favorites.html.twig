@@ -4,10 +4,11 @@
 {% endblock %}
 
 {% block body %}
-
+	<br>
+	<h1>Mes recettes préférées</h1>
+	<br>
 {% for recipe in recipes %}
 {% if recipe.favorite == true %}
-		<br>
 		<article>
 			<h3>{{ recipe.title }}</h3>
 			<div class="metadata">Ecrit le

@@ -5,17 +5,22 @@
 
 
 {% block body %}
-{% for category in categories %}
-		<br>
+	<br>
+	<h1>Catégories</h1>
+	<br>
+	{% for category in categories %}
+
 		<article>
 			<h3>{{ category.title }}</h3>
 			<div class="content">
 				<img src="{{ category.image }}" width="350" length="150" alt=""><br><br>
 			</div>
-            <div>
+			<div>
 				<p>{{ category.content }}</p>
-            </div>
+			</div>
+			<a href="{{ path('favorites') }}" class="btn btn-primary">Consulter la catégorie
+				{{ category.title }}</a>
 		</article>
 		<br>
-{% endfor %}
+	{% endfor %}
 {% endblock %}
