@@ -90,6 +90,24 @@ class RecipesController extends AbstractController
         return $this ->render('recipes/categories.html.twig', [
             'categories' => $categories
     ]);
+
+      }
+
+  /**
+   * @Route("/categories/{id}", name="category_show") 
+   */
+
+      public function showCategory($id) {
+
+        $repo = $this ->getDoctrine() ->getRepository(Category::class);
+
+        $category = $repo ->find($id);
+
+
+        return $this ->render('recipes/category.html.twig', [
+                'category' => $category
+        ]);
+
       }
 
 

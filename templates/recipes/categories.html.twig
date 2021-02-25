@@ -18,7 +18,7 @@
 			<div>
 				<p>{{ category.content }}</p>
 			</div>
-			<a href="{{ path('favorites') }}" class="btn btn-primary">Consulter la catégorie
+			<a href="{{ path('category_show', {'id':category.id}) }}" class="btn btn-primary">Consulter la catégorie
 				{{ category.title }}</a>
 		</article>
 		<br>

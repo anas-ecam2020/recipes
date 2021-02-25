@@ -2,37 +2,50 @@
 
 {% form_theme formRecipe 'bootstrap_4_layout.html.twig' %}
 
-{% block title %}Ajoutez une recette
+{% block title %}Ajoutez une nouvelle recette!
 {% endblock %}
 
 {% block body %}
-<br>
-<div>
-<h3>Sur cette page vous pouvez ajouter une recette à partager pour tout le monde! </h3>
-</div>
-<br>
-<div>
-<p>Tip : Il est conseillé de rédiger les étapes d'une recette sous forme de bullet points </p>
-</div>
-<br>
-<h4>Formulaire :</h4>
-<br>
-<br>
+	<br>
+	{% if editMode %}
+		<div>
+			<h3>Sur cette page vous pouvez modifier la recette à partager pour tout le monde!
+			</h3>
+		</div>
+		<br>
+	{% else %}
+		<div>
+			<h3>Sur cette page vous pouvez ajouter une recette à partager pour tout le monde!
+			</h3>
+		</div>
+		<br>
+	{% endif %}
 
-{{ form_start(formRecipe) }}
 
-{{ form_row(formRecipe.title, {'label':'Nom de la recette'})}}
-{{ form_row(formRecipe.category) }}
-{{ form_row(formRecipe.image, {'label': 'Image recette','attr': {'placeholder': "URL de l'image"}}) }}
-{{ form_row(formRecipe.time, {'label':'Temps de préparation'}) }}
-{{ form_row(formRecipe.difficulty, {'label':'Difficulté'}) }}
-{{ form_row(formRecipe.portions, {'label':'Portions'}) }}
-{{ form_row(formRecipe.content, {'label':'Description de la recette','attr': {'placeholder': "Veuillez décrire les étapes à suivre pour votre recette..."}}) }}
-{% if editMode %}
-    {{ form_row(formRecipe.save, {'label': 'Enregistrez vos changements!'}) }}
-{% else %}
-    {{ form_row(formRecipe.save, {'label': 'Ajoutez votre recette!'}) }}
-{% endif %}
+	<div>
+		<p>Tip : Il est conseillé de rédiger les étapes d'une recette sous forme de bullet points
+		</p>
+	</div>
+	<br>
+	<h4>Formulaire :</h4>
+	<br>
+	<br>
 
-{{ form_end(formRecipe) }}
+	{{ form_start(formRecipe) }}
+
+	{{ form_row(formRecipe.title, {'label':'Nom de la recette'})}}
+	{{ form_row(formRecipe.category) }}
+	{{ form_row(formRecipe.image, {'label': 'Image recette','attr': {'placeholder': "URL de l'image"}}) }}
+	{{ form_row(formRecipe.time, {'label':'Temps de préparation'}) }}
+	{{ form_row(formRecipe.difficulty, {'label':'Difficulté'}) }}
+	{{ form_row(formRecipe.portions, {'label':'Portions'}) }}
+	{{ form_row(formRecipe.content, {'label':'Description de la recette','attr': {'placeholder': "Veuillez décrire les étapes à suivre pour votre recette..."}}) }}
+	{% if editMode %}
+		{{ form_row(formRecipe.save, {'label': 'Enregistrez vos changements!'}) }}
+	{% else %}
+		{{ form_row(formRecipe.save, {'label': 'Ajoutez votre recette!'}) }}
+	{% endif %}
+
+	{{ form_end(formRecipe) }}
 {% endblock %}
+
