@@ -10,9 +10,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use App\Entity\Recipe;
 //use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+//use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+//use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+//use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use App\Form\RecipeType;
 
 
 
@@ -124,42 +125,8 @@ class RecipesController extends AbstractController
             $recipe = new Recipe(); // si je n'ai pas de recette j'ai envie de créer une instance
         }
 
-        $form = $this->createFormBuilder($recipe)
-                      ->add('title')
-                      ->add('category', EntityType::class, [
-                        "class" => Category::class,
-                        "choice_label" => 'title',
-                      ])
-                      ->add('image')
-                      ->add('time', ChoiceType::class, [
-                        "choices"=> array(
-                          '5 minutes' => 5,
-                          '10 minutes' => 10,
-                          '15 minutes' => 15,
-                          '20 minutes' => 20,
-                          '25 minutes' => 25,
-                          '30 minutes' => 30,
-                        )
-                      ])
-                      ->add('difficulty', ChoiceType::class, [
-                        "choices"=> array(
-                          'Facile' => 'Facile',
-                          'Moyenne' => 'Moyenne',
-                          'Difficile' => 'Difficile',
-                        )
-                      ])
-                      ->add('portions', ChoiceType::class, [
-                        "choices"=> array(
-                          '1 portion' => 1,
-                          '2 portions' => 2,
-                          '3 portions' => 3,
-                          '4 portions' => 4,
-                          '5 portions' => 5,
-                        )
-                      ])
-                      ->add('content')
-                      ->add('save', SubmitType::class)                    
-                      ->getForm();
+
+        $form = $this->createForm(RecipeType::class, $recipe);
 
         // les infos envoyées dans le formulaire se trouvent dans la request
         $form ->handleRequest($request);
