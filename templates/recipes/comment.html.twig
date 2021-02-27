@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme formComment 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Ajoutez un nouveau commentaire!
+{% endblock %}
+
+{% block body %}
+
+	<br>
+		<div>
+			<h3>Sur cette page vous pouvez ajouter un commentaire!
+			</h3>
+		</div>
+		<br>
+	<br>
+	<h4>Formulaire :</h4>
+	<br>
+	<br>
+	{{ form_start(formComment) }}
+	{{ form_row(formComment.author, {'label':'Votre prénom et nom :'})}}
+	{{ form_row(formComment.content, {'label':'Votre commentaire :'}) }}
+    {{ form_row(formComment.save, {'label': 'Enregistrez votre nouveau commentaire!'}) }}
+	{{ form_end(formComment) }}
+
+
+{% endblock %}
+
