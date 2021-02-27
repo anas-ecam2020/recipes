@@ -42,11 +42,30 @@
 		</div>
 		<div>
 			<h5>Temps de préparation :</h5>
-			<p>{{ recipe.time }}
-				minutes</p>
+			<p>{{ recipe.time }} minutes</p>
 		</div>
 	</article>
 	<br>
+	<br>
+	<h5>Commentaires :</h5>
+	<hr>
+	<section id="commentaires">
+		{% for comment in recipe.comments %}
+		<div clas="comment">
+			<div class="row">
+				<div class="col-3">
+				{{comment.author}} (<small>{{comment.createdAt | date('d/m/Y H:i')}}</small>)
+				</div>
+				<div class="col">
+					{{ comment.content }}
+				</div>
+			</div>
+		</div>
+		<hr>
+		{% endfor %}
+	</section>
+	<a href="{{ path('recipe_edit', {'id':recipe.id}) }}" class="btn btn-primary">
+					Ajouter un commentaire</a>
 
 {% endblock %}
 
