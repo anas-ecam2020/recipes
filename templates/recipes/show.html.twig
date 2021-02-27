@@ -11,12 +11,20 @@
 	<article>
 		<div class="row">
 			<div class="column">
-				<h3>{{ recipe.title }} &nbsp;</h3>
+				<h3>{{ recipe.title }}
+					&nbsp;</h3>
 			</div>
 			<div class="column">
 				<a href="{{ path('recipe_edit', {'id':recipe.id}) }}" class="btn btn-primary">
 					Modifier la recette
 				</a>
+			</div>
+			<div class="column">
+				<p>&ensp;</p>
+			</div>
+			<div class="column">
+				<a href="{{ path('comment_create', {'id':recipe.id}) }}" class="btn btn-primary">
+					Ajouter un commentaire</a>
 			</div>
 		</div>
 		<div class="metadata">Ecrit le
@@ -42,7 +50,8 @@
 		</div>
 		<div>
 			<h5>Temps de préparation :</h5>
-			<p>{{ recipe.time }} minutes</p>
+			<p>{{ recipe.time }}
+				minutes</p>
 		</div>
 	</article>
 	<br>
@@ -51,21 +60,20 @@
 	<hr>
 	<section id="commentaires">
 		{% for comment in recipe.comments %}
-		<div clas="comment">
-			<div class="row">
-				<div class="col-3">
-				{{comment.author}} (<small>{{comment.createdAt | date('d/m/Y H:i')}}</small>)
-				</div>
-				<div class="col">
-					{{ comment.content }}
+			<div clas="comment">
+				<div class="row">
+					<div class="col-3">
+						{{comment.author}}
+						(<small>{{comment.createdAt | date('d/m/Y H:i')}}</small>)
+					</div>
+					<div class="col">
+						{{ comment.content }}
+					</div>
 				</div>
 			</div>
-		</div>
-		<hr>
+			<hr>
 		{% endfor %}
 	</section>
-	<a href="{{ path('recipe_edit', {'id':recipe.id}) }}" class="btn btn-primary">
-					Ajouter un commentaire</a>
+
 
 {% endblock %}
-
