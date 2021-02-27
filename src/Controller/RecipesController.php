@@ -3,25 +3,37 @@
 namespace App\Controller;
 
 use App\Entity\Category;
+use App\Entity\Recipe;
+use App\Entity\Comment;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Entity\Recipe;
 //use Doctrine\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManagerInterface;
-//use Symfony\Bridge\Doctrine\Form\Type\EntityType;
-//use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-//use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use App\Form\RecipeType;
-
+use App\Form\CommentType;
 
 
 class RecipesController extends AbstractController
 {
+
+
+
+    /**
+     * @Route("/", name="home")
+     */
+
+    public function home() {
+
+      return $this ->render('recipes/home.html.twig');
+
+     }
+
     /**
      * @Route("/recipes", name="recipes")
      */
+
     public function index(): Response
     {
         $repo = $this ->getDoctrine()->getRepository(Recipe::class);
@@ -50,15 +62,39 @@ class RecipesController extends AbstractController
 
     }
 
-    /**
-     * @Route("/", name="home")
-     */
+      /**
+       * @Route("/recipes/{id}/comment", name="comment_create")
+       */
 
-     public function home() {
+      public function comment($id ,Request $request, EntityManagerInterface $manager) {
 
-      return $this ->render('recipes/home.html.twig');
+        $repo = $this ->getDoctrine() ->getRepository(Recipe::class);
+        $recipe = $repo ->find($id);
 
-     }
+        $comment = new Comment();
+
+        $form = $this->createForm(CommentType::class, $comment);
+
+    // les infos envoyées dans le formulaire se trouvent dans la request
+        $form ->handleRequest($request);
+    
+    // est-ce que le form a été soumis et est-ce que le form est valide?
+        if($form->isSubmitted() && $form->isValid()) {
+            $comment->setCreatedAt(new \DateTime());
+            $comment->setRecipe($recipe);
+            // faire persister le comment
+            $manager->persist($comment);
+            // faire la requête
+            $manager->flush();
+
+          // rédiriger vers l'article créé
+          return $this->redirectToRoute('recipe_show', ['id' => $recipe->getId()]);
+    }
+
+    return $this ->render('recipes/comment.html.twig',[
+          'formComment' => $form->createView(), // créer l'aspect affichage au formulaire
+    ]);
+    }
 
 
     /**
@@ -70,7 +106,6 @@ class RecipesController extends AbstractController
         $repo = $this ->getDoctrine() ->getRepository(Recipe::class);
 
         $recipes = $repo ->findAll();
-
 
         return $this ->render('recipes/favorites.html.twig', [
                 'recipes' => $recipes
@@ -154,5 +189,4 @@ class RecipesController extends AbstractController
               'editMode' => $recipe->getId() !== null
         ]);
       }
-       
 }
