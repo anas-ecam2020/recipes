@@ -19,7 +19,6 @@ class AppFixtures extends Fixture
         "Les meilleures crêpes", "Rouleaux de pizza Pepperoni");
         $catimages = array("/images/petit.png","/images/dejeuner.png", "/images/diner.png","/images/brunch.png","/images/snacks.png");
         $recimages = array("/images/smoothie.png", "/images/rouleaux.png", "/images/poulet.png", "/images/crepes.png", "/images/pizza.png");
-        $favorites = array(true, false);
         $times = array(5, 25, 20, 10, 30);
         $difficulties = array("Facile", "Difficile", "Moyenne");
         $portions = array(5, 2, 4);
@@ -41,7 +40,7 @@ class AppFixtures extends Fixture
                     ->setCreatedAt($faker->dateTimeBetween('-6 months'))
                     ->setCategory($category)
                     ->setImage($recimages[$i])
-                    ->setFavorite($favorites[rand(0, 1)])
+                    ->setFavorite(rand(0, 1))
                     ->setTime($times[$i])
                     ->setDifficulty($difficulties[rand(0, 2)])
                     ->setPortions($portions[rand(0, 2)]);
