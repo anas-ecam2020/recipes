@@ -28,7 +28,7 @@ class Recipe
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Assert\Length(min=10, max=255, minMessage="Votre recette doit contenir au moins 10 caractères")
+     * @Assert\Length(min=4, max=255, minMessage="Votre recette doit contenir au moins 4 caractères")
      */
     private $title;
 

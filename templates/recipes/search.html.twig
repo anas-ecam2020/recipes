@@ -1,0 +1,20 @@
+{% extends 'base.html.twig' %}
+
+{% form_theme formResearch 'bootstrap_4_layout.html.twig' %}
+
+{% block title %}Recherchez une recette!
+{% endblock %}
+
+{% block body %}
+	<br>
+	<div>
+		<h3>Veuillez réaliser votre recherche :
+		</h3>
+	</div>
+	<br>
+
+    {{ form_start(formResearch) }}
+    {{ form_row(formResearch.title, {'label':'Nom de la recette'})}}
+    {{ form_row(formResearch.save, {'label': 'Lancer la recherche!'}) }}
+    {{ form_end(formResearch) }}
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Resultats recherche
+{% endblock %}
+
+{% set counter = 0 %}
+
+
+{% block body %}
+{% for recipe in recipes %}
+    {% if recipeResearch.title in recipe.title|lower %}
+    {% set counter = counter + 1 %}
+    {% endif %}
+{% endfor %}
+
+    {% if counter > 1 %}
+    <br>
+        <p>{{ counter }} résultats pour "{{ recipeResearch.title }}"<p>
+    <br>
+    {% else %}
+    <br>
+        <p>{{ counter }} résultat pour "{{ recipeResearch.title }}"<p>
+    <br>
+    {% endif %}
+
+	{% for recipe in recipes %}
+    {% if recipeResearch.title in recipe.title|lower %}
+    {% set counter = counter + 1 %}
+		<article>
+			<h3>{{ recipe.title }}</h3>
+			<div class="metadata">Ecrit le
+				{{recipe.createdAt | date('d/m/Y') }}
+				à
+				{{recipe.createdAt | date('H:i') }}</div>
+				<br>
+			<div class="content">
+				<img src="{{ recipe.image }}" width="350" length="150" alt=""><br><br>
+				<a href="{{ path('recipe_show', {'id':recipe.id}) }}" class="btn btn-primary">Consulter la recette</a>
+			</div>
+		</article>
+		<br>
+    {% endif %}
+	{% endfor %}
+{% endblock %}
+

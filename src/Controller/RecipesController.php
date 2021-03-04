@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Form\RecipeType;
 use App\Form\CommentType;
+use App\Form\SearchType;
 
 
 class RecipesController extends AbstractController
@@ -189,4 +190,33 @@ class RecipesController extends AbstractController
               'editMode' => $recipe->getId() !== null
         ]);
       }
+
+      //recherche recette sur base du nom de la recette
+
+      /**
+       * @Route("/search",name="search")
+       */
+
+       public function search(Request $request) {
+
+        $repo = $this ->getDoctrine()->getRepository(Recipe::class);
+        $recipes = $repo -> findAll();
+        $form = $this->createForm(SearchType::class);
+
+        // les infos envoyées dans le formulaire se trouvent dans la request
+        $form ->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()) {
+
+          return $this->render('recipes/result.html.twig', [
+            'recipeResearch' => $request->request->get('search'), 
+            'recipes' => $recipes
+            ]);
+
+        }
+
+      return $this ->render('recipes/search.html.twig',[
+          'formResearch' => $form->createView() // créer l'aspect affichage au formulaire
+    ]);
+       }
 }
