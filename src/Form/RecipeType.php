@@ -36,6 +36,12 @@ class RecipeType extends AbstractType
                   'Difficile' => 'Difficile',
                 )
               ])
+            ->add('favorite', ChoiceType::class, [
+                "choices"=> array(
+                  'Oui' => '1',
+                  'Non' => '0',
+                )
+              ])
             ->add('portions', ChoiceType::class, [
                 "choices"=> array(
                   '1 portion' => 1,

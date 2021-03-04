@@ -38,6 +38,7 @@
 	{{ form_row(formRecipe.image, {'label': 'Image recette','attr': {'placeholder': "URL de l'image"}}) }}
 	{{ form_row(formRecipe.time, {'label':'Temps de préparation'}) }}
 	{{ form_row(formRecipe.difficulty, {'label':'Difficulté'}) }}
+	{{ form_row(formRecipe.favorite, {'label':'Favori'}) }}
 	{{ form_row(formRecipe.portions, {'label':'Portions'}) }}
 	{{ form_row(formRecipe.content, {'label':'Description de la recette','attr': {'placeholder': "Veuillez décrire les étapes à suivre pour votre recette..."}}) }}
 	{% if editMode %}
