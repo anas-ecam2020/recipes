@@ -172,10 +172,9 @@ class RecipesController extends AbstractController
           if(!$recipe->getId()){
             //Donner sa date de création si l'article n'a pas d'id (n'existe pas)
             $recipe->setCreatedAt(new \DateTime());
-          }
-
             $recipe->setFavorite(0);
-
+          }
+          
             // faire persister la recette
             $manager->persist($recipe);
             // faire la requête
@@ -208,14 +207,14 @@ class RecipesController extends AbstractController
 
         if($form->isSubmitted() && $form->isValid()) {
 
-          return $this->render('recipes/result.html.twig', [
+          return $this->render('recipes/search_result.html.twig', [
             'recipeResearch' => $request->request->get('search'), 
             'recipes' => $recipes
             ]);
 
         }
 
-      return $this ->render('recipes/search.html.twig',[
+      return $this ->render('recipes/search_form.html.twig',[
           'formResearch' => $form->createView() // créer l'aspect affichage au formulaire
     ]);
        }
