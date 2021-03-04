@@ -23,55 +23,64 @@
 				<p>&ensp;</p>
 			</div>
 			<div class="column">
-				<a href="{{ path('comment_create', {'id':recipe.id}) }}" class="btn btn-primary">
-					Ajouter un commentaire</a>
+				<a href="{{ path('delete', {'id':recipe.id}) }}" class="btn btn-primary">
+					Supprimer la recette</a>
 			</div>
 		</div>
-		
-	<div class="metadata">Ecrit le
-		{{recipe.createdAt | date('d/m/Y') }}
-		à
-		{{recipe.createdAt | date('H:i') }}</div>
+
+		<div class="metadata">Ecrit le
+			{{recipe.createdAt | date('d/m/Y') }}
+			à
+			{{recipe.createdAt | date('H:i') }}</div>
+		<br>
+		<div class="content">
+			<img src="{{ recipe.image }}" width="350" length="150" alt=""><br><br>
+		</div>
+		<h5>Description recette :</h5>
+		<div>
+			{{ recipe.content }}
+		</div>
+		<br>
+		<div>
+			<h5>Difficulté :</h5>
+			<p>{{ recipe.difficulty }}</p>
+		</div>
+		<div>
+			<h5>Portions :</h5>
+			<p>{{ recipe.portions }}</p>
+		</div>
+		<div>
+			<h5>Temps de préparation :</h5>
+			<p>{{ recipe.time }}
+				minutes</p>
+		</div>
+	</article>
 	<br>
-	<div class="content">
-		<img src="{{ recipe.image }}" width="350" length="150" alt=""><br><br>
-	</div>
-	<h5>Description recette :</h5>
-	<div>
-		{{ recipe.content }}
-	</div>
 	<br>
-	<div>
-		<h5>Difficulté :</h5>
-		<p>{{ recipe.difficulty }}</p>
-	</div>
-	<div>
-		<h5>Portions :</h5>
-		<p>{{ recipe.portions }}</p>
-	</div>
-	<div>
-		<h5>Temps de préparation :</h5>
-		<p>{{ recipe.time }}
-			minutes</p>
-	</div>
-</article>
-<br>
-<br>
-<h5>Commentaires :</h5>
-<hr>
-<section id="commentaires">
-	{% for comment in recipe.comments %}
-		<div clas="comment">
-			<div class="row">
-				<div class="col-3">
-					{{comment.author}}
-					(<small>{{comment.createdAt | date('d/m/Y H:i')}}</small>)
-				</div>
-				<div class="col">
-					{{ comment.content }}
+	<h5>Commentaires :</h5>
+	<section id="commentaires">
+		<br>
+		{% for comment in recipe.comments %}
+			<div clas="comment">
+				<div class="row">
+					<div class="col-3">
+						{{comment.author}}
+						(<small>{{comment.createdAt | date('d/m/Y H:i')}}</small>)
+					</div>
+					<div class="col">
+						{{ comment.content }}
+					</div>
 				</div>
 			</div>
+			<hr>
+		{% endfor %}
+		<br>
+		<div class="column">
+			<a href="{{ path('comment_create', {'id':recipe.id}) }}" class="btn btn-primary">
+				Ajouter un commentaire</a>
 		</div>
-		<hr>
-	{% endfor %}
-</section>{% endblock %}
+		<br>
+		<br>
+
+	</section>
+{% endblock %}

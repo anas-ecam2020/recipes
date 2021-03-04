@@ -218,4 +218,21 @@ class RecipesController extends AbstractController
           'formResearch' => $form->createView() // créer l'aspect affichage au formulaire
     ]);
        }
+       /**
+        * @Route("recipes/{id}/delete", name="delete")
+        */
+
+        public function delete($id, EntityManagerInterface $manager) {
+
+          $repo = $this ->getDoctrine() ->getRepository(Recipe::class);
+          $recipe = $repo ->find($id);
+
+          $manager->remove($recipe);
+          // faire la requête
+          $manager->flush();
+
+          return $this ->render('recipes/delete_notification.html.twig', [
+            'recipe' => $recipe
+          ]);
+        }
 }

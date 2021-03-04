@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recette supprimée!
+{% endblock %}
+
+{% block body %}
+	<br>
+	<h3>Votre recette "{{ recipe.title }}" a été bien supprimée!</h3>
+	<br>
+	<div class="column">
+		<a href="{{ path('recipes') }}" class="btn btn-primary">
+			Retour aux recettes</a>
+	</div>
+{% endblock %}
