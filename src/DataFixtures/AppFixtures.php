@@ -18,7 +18,7 @@ class AppFixtures extends Fixture
         $recipes = array("Smoothie au beurre de cacahuète, cacao et banane", "Rouleaux de sushi au pain", "Poulet parmigiana à faible teneur en glucides", 
         "Les meilleures crêpes", "Rouleaux de pizza Pepperoni");
         $catimages = array("/images/petit.png","/images/dejeuner.png", "/images/diner.png","/images/brunch.png","/images/snacks.png");
-        $recimages = array("/images/smoothie.png", "/images/rouleaux.png", "/images/poulet.png", "/images/crepes.png", "/images/pizza.png");
+        $recimages = array("/images/smoothie.png", "/images/rouleaux.png", "/images/poulet.png", "/images/crepes.png", "/images/pepperoni.png");
         $times = array(5, 25, 20, 10, 30);
         $difficulties = array("Facile", "Difficile", "Moyenne");
         $portions = array(5, 2, 4);
