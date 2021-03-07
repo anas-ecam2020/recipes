@@ -8,7 +8,7 @@
 
 {% block body %}
 {% for recipe in recipes %}
-    {% if recipeResearch.title in recipe.title|lower %}
+    {% if recipeResearch.title|lower in recipe.title|lower %}
     {% set counter = counter + 1 %}
     {% endif %}
 {% endfor %}
