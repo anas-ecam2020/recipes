@@ -27,7 +27,13 @@ class RecipesController extends AbstractController
 
     public function home() {
 
-      return $this ->render('recipes/home.html.twig');
+      $repo = $this ->getDoctrine() ->getRepository(Recipe::class);
+
+      $recipes = $repo ->findAll();
+
+      return $this ->render('recipes/home.html.twig', [
+        'recipes' => $recipes
+      ]);
 
      }
 
@@ -46,6 +52,7 @@ class RecipesController extends AbstractController
             'recipes' => $recipes
         ]);
     }
+
     /**
     * @Route("/recipes/{id}", name="recipe_show") 
     */
@@ -96,23 +103,6 @@ class RecipesController extends AbstractController
           'formComment' => $form->createView(), // créer l'aspect affichage au formulaire
     ]);
     }
-
-
-    /**
-     * @Route("/favorites", name="favorites")
-     */
-
-     public function favorites() {
-
-        $repo = $this ->getDoctrine() ->getRepository(Recipe::class);
-
-        $recipes = $repo ->findAll();
-
-        return $this ->render('recipes/favorites.html.twig', [
-                'recipes' => $recipes
-        ]);
-     }
-
 
      /**
       * @Route("/categories", name="categories")
@@ -191,7 +181,6 @@ class RecipesController extends AbstractController
       }
 
       //recherche recette sur base du nom de la recette
-
       /**
        * @Route("/search",name="search")
        */
@@ -218,6 +207,7 @@ class RecipesController extends AbstractController
           'formResearch' => $form->createView() // créer l'aspect affichage au formulaire
     ]);
        }
+
        /**
         * @Route("recipes/{id}/delete", name="delete")
         */
