@@ -12,7 +12,15 @@
 	<h1>Catégorie :
 		{{ category.title }}</h1>
 	<br>
-	{% for recipe in  category.getRecipes() %}
+
+	{% if category.getRecipes() is empty %}
+		<h5>Désolé, nous n'avons pas actuellement de recettes faisant partie de la catégorie: "{{ category.title }}"</h5>
+		<br>
+		<p>Veuillez revenir sur les catégories à l'aide du bouton ci-dessous :</p>
+		<a href="{{ path('categories') }}" class="btn btn-primary">Revenez sur les catégories!</a>
+	{% endif %}
+
+	{% for recipe in category.getRecipes() %}
 		<article>
 			<h3>{{ recipe.title }}</h3>
 			<div class="metadata">Ecrit le
