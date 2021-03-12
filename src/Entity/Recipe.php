@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\RecipeRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -17,59 +17,72 @@ class Recipe
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("recipe:read")
      */
     private $id;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="recipes")
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="recipes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
+     * @Groups("recipe:read")
      */
     private $category;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=4, max=255, minMessage="Votre recette doit contenir au moins 4 caractères")
+     * @Assert\NotBlank(message="Le titre est obligatoire")
+     * @Groups("recipe:read")
      */
     private $title;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\Length(min=10,  minMessage="Votre description doit contenir au moins 10 caractères")
+     * @Assert\NotBlank(message="Le contenu est obligatoire")
+     * @Groups("recipe:read")
      */
     private $content;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups("recipe:read")
      */
     private $createdAt;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("recipe:read")
      */
     private $image;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Groups("recipe:read")
      */
     private $favorite;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups("recipe:read")
      */
     private $time;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups("recipe:read")
      */
     private $difficulty;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups("recipe:read")
      */
     private $portions;
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recipe", orphanRemoval=true)
+     * @Groups("recipe:read")
      */
     private $comments;
 

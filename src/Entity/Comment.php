@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Repository\CommentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -15,18 +15,21 @@ class Comment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups("recipe:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=6,  minMessage="Votre nom doit contenir au moins 6 caractères")
+     * @Groups("recipe:read")
      */
     private $author;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\Length(min=6,  minMessage="Votre commentaire doit contenir au moins 10 caractères")
+     * @Groups("recipe:read")
      */
     private $content;
 
