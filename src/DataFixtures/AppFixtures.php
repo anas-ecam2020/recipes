@@ -17,8 +17,8 @@ class AppFixtures extends Fixture
         $categories = array("Petit-déjeuner", "Déjeuner", "Dîner", "Brunch", "Snacks");
         $recipes = array("Smoothie au beurre de cacahuète, cacao et banane", "Rouleaux de sushi au pain", "Poulet parmigiana à faible teneur en glucides", 
         "Les meilleures crêpes", "Rouleaux de pizza Pepperoni");
-        $catimages = array("/images/petit.png","/images/dejeuner.png", "/images/diner.png","/images/brunch.png","/images/snacks.png");
-        $recimages = array("/images/smoothie.png", "/images/rouleaux.png", "/images/poulet.png", "/images/crepes.png", "/images/pepperoni.png");
+        $catImages = array("/images/petit.png","/images/dejeuner.png", "/images/diner.png","/images/brunch.png","/images/snacks.png");
+        $recImages = array("/images/smoothie.png", "/images/rouleaux.png", "/images/poulet.png", "/images/crepes.png", "/images/pepperoni.png");
         $times = array(5, 25, 20, 10, 30);
         $difficulties = array("Facile", "Difficile", "Moyenne");
         $portions = array(5, 2, 4);
@@ -30,7 +30,7 @@ class AppFixtures extends Fixture
             $category ->setTitle($categories[$i])
                       ->setContent("Bienvenue dans la catégorie ".$categories[$i]."! "."Cliquez sur le bouton ci-dessous 
             pour consulter toutes les recettes relatives à la catégorie ".$categories[$i].".")
-                      ->setImage($catimages[$i]);
+                      ->setImage($catImages[$i]);
 
             $manager ->persist($category);
 
@@ -39,7 +39,7 @@ class AppFixtures extends Fixture
                     ->setContent($faker->paragraph())
                     ->setCreatedAt($faker->dateTimeBetween('-6 months'))
                     ->setCategory($category)
-                    ->setImage($recimages[$i])
+                    ->setImage($recImages[$i])
                     ->setFavorite(rand(0, 1))
                     ->setTime($times[$i])
                     ->setDifficulty($difficulties[rand(0, 2)])
