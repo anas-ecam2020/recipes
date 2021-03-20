@@ -92,4 +92,38 @@ class ApiRecipeController extends AbstractController
 
         }
     }
+
+    /**
+     * @Route("/api/recipe", name="api_recipe_put", methods={"PUT"})
+     */
+
+     public function patch(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em) {
+
+        $jsonReceived = $request -> getContent();
+
+        try {
+            $toModify = $serializer ->deserialize($jsonReceived, Recipe::class, 'json');
+
+            $errors = $validator->validate($toModify);
+
+            // vérifier si le validator n'a pas d'erreurs
+            if(count($errors) > 0) {
+                return $this->json($errors, 400);
+            }
+
+            $em->persist($toModify);
+            $em->flush();
+    
+            return $this->json($toModify, 200, [], ['groups'=>'recipe:read']);
+
+
+        } catch(NotEncodableValueException $e) {
+
+            return $this->json([
+                'status' => 400,
+                'message' => $e ->getMessage()
+            ], 400);
+
+        }
+     }
 }
