@@ -28,15 +28,14 @@ class ApiRecipeController extends AbstractController
  */
     public function store(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator) {
         
-        $jsonRecu = $request->getContent();
-
+        $jsonReceived = $request->getContent();
 
         try {
-            $recipe = $serializer->deserialize($jsonRecu, Recipe::class, 'json');
+            $recipe = $serializer->deserialize($jsonReceived, Recipe::class, 'json');
             $recipe ->setCreatedAt(new \DateTime());
 
             $errors = $validator->validate($recipe);
-
+            // vérifier si le validator n'a pas d'erreurs
             if(count($errors) > 0) {
                 return $this->json($errors, 400);
             }
@@ -44,8 +43,8 @@ class ApiRecipeController extends AbstractController
             $em->persist($recipe);
             $em->flush();
     
-            return $this->json($recipe, 201, [], ['groups'=>'post:read']);
-
+            return $this->json($recipe, 201, [], ['groups'=>'recipe:read']);
+        // si le format json remis n'est pas correctement écrit "Syntax error"
         } catch(NotEncodableValueException $e) {
 
             return $this->json([
@@ -53,6 +52,44 @@ class ApiRecipeController extends AbstractController
                 'message' => $e ->getMessage()
             ], 400);
             
+        }
+    }
+
+    /**
+     * @Route("/api/recipe", name="api_recipe_delete", methods={"DELETE"})
+     */
+
+    public function delete(Request $request, SerializerInterface $serializer, RecipeRepository $recipeRepository, EntityManagerInterface $em) {
+
+        $jsonReceived = $request->getContent();
+
+        try { 
+
+            $toDelete = $serializer->deserialize($jsonReceived, Recipe::class, 'json');
+            $toDeleteTitle = $toDelete -> getTitle();
+            $recipe = $recipeRepository -> findOneBy(['title' => $toDeleteTitle]);
+
+            if($recipe == null) {
+
+                $errdb = "Sorry, this recipe does not exist on the database.";
+                return $this->json($errdb, 400);
+
+             } else {
+
+                $em->remove($recipe);
+                $em->flush();
+                $deleteResponse = "The recipe '".$recipe->getTitle()."' has been successfully deleted!";
+                return $this->json($deleteResponse, 200);
+
+            }
+        // si le format json remis n'est pas correctement écrit "Syntax error"
+        } catch(NotEncodableValueException $e) {
+
+            return $this->json([
+                'status' => 400,
+                'message' => $e ->getMessage()
+            ], 400);
+
         }
     }
 }
