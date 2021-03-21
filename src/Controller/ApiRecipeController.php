@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Recipe;
+use App\Repository\CategoryRepository;
 use App\Repository\RecipeRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -37,16 +38,23 @@ class ApiRecipeController extends AbstractController
 /**
  * @Route("/api/recipe", name="api_recipe_store", methods={"POST"})
  */
-    public function store(Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator) {
+    public function store(CategoryRepository $categoryRepository, Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator) {
         
         $jsonReceived = $request->getContent();
 
         try {
-            $recipe = $serializer->deserialize($jsonReceived, Recipe::class, 'json');
-            $recipe ->setCreatedAt(new \DateTime());
 
+            $recipe = $serializer->deserialize($jsonReceived, Recipe::class, 'json');
+
+            $categoryValues = $recipe -> getCategory();
+            $categoryTitle = $categoryValues -> getTitle();
+
+            $category = $categoryRepository -> findOneBy(['title' => $categoryTitle]);
+            $recipe -> setCategory($category);
+            $recipe ->setCreatedAt(new \DateTime());
             $errors = $validator->validate($recipe);
-            // vérifier si le validator n'a pas d'erreurs
+
+
             if(count($errors) > 0) {
                 return $this->json($errors, 400);
             }
