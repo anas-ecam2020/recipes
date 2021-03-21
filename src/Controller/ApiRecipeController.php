@@ -115,7 +115,7 @@ class ApiRecipeController extends AbstractController
      * @Route("/api/recipe", name="api_recipe_put", methods={"PUT"})
      */
 
-     public function patch(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em) {
+     public function put(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em) {
 
         $jsonReceived = $request -> getContent();
 
