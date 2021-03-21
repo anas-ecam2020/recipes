@@ -67,26 +67,24 @@ class ApiRecipeController extends AbstractController
     }
 
     /**
-     * @Route("/api/recipe", name="api_recipe_delete", methods={"DELETE"})
+     * @Route("/api/recipe/{id}", name="api_recipe_delete", methods={"DELETE"})
      */
 
-    public function delete(Request $request, SerializerInterface $serializer, RecipeRepository $recipeRepository, EntityManagerInterface $em) {
+    public function delete($id, RecipeRepository $recipeRepository, EntityManagerInterface $em) {
 
-        $jsonReceived = $request->getContent();
+        /*$jsonReceived = $request->getContent();
+        try {
 
-        try { 
-
-            $toDelete = $serializer->deserialize($jsonReceived, Recipe::class, 'json');
+           /* $toDelete = $serializer->deserialize($jsonReceived, Recipe::class, 'json');
             $toDeleteTitle = $toDelete -> getTitle();
-            $recipe = $recipeRepository -> findOneBy(['title' => $toDeleteTitle]);
+            $recipe = $recipeRepository -> findOneBy(['title' => $toDeleteTitle]); 
+            
 
             if($recipe == null) {
 
                 $errdb = "Sorry, this recipe does not exist on the database.";
-                return $this->json($errdb, 400);
-
+                return $this->json($errdb, 400); 
              } else {
-
                 $em->remove($recipe);
                 $em->flush();
                 $deleteResponse = "The recipe '".$recipe->getTitle()."' has been successfully deleted!";
@@ -101,7 +99,16 @@ class ApiRecipeController extends AbstractController
                 'message' => $e ->getMessage()
             ], 400);
 
-        }
+        }*/
+
+        $toDelete = $recipeRepository -> find($id);
+
+        $em ->remove($toDelete);
+        $em ->flush();
+
+        $response = "The recipe '".$toDelete->getTitle()."' has been successfully deleted!";
+
+        return $this -> json($response, 200, [], ['groups' =>'recipe:read']);
     }
 
     /**
