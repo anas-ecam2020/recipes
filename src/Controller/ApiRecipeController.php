@@ -23,6 +23,17 @@ class ApiRecipeController extends AbstractController
         return $this->json($recipeRepository->findAll(), 200, [], ['groups' =>'recipe:read']);
 
     }
+
+
+    /**
+     * @Route("/api/recipe/{id}", name="api_recipe_by_id", methods={"GET"})
+     */
+    public function recipe(RecipeRepository $recipeRepository, $id): Response {
+
+        return $this->json($recipeRepository->find($id), 200, [], ['groups' =>'recipe:read']);
+
+    }
+
 /**
  * @Route("/api/recipe", name="api_recipe_store", methods={"POST"})
  */
