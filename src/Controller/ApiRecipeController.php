@@ -48,8 +48,9 @@ class ApiRecipeController extends AbstractController
 
             $categoryValues = $recipe -> getCategory();
             $categoryTitle = $categoryValues -> getTitle();
-
+            // extraire l'objet catégorie sur base du titre
             $category = $categoryRepository -> findOneBy(['title' => $categoryTitle]);
+            // setCategory à la nouvelle recette créée
             $recipe -> setCategory($category);
             $recipe ->setCreatedAt(new \DateTime());
             $errors = $validator->validate($recipe);
@@ -120,17 +121,33 @@ class ApiRecipeController extends AbstractController
     }
 
     /**
-     * @Route("/api/recipe", name="api_recipe_put", methods={"PUT"})
+     * @Route("/api/recipe/{id}", name="api_recipe_put", methods={"PUT"})
      */
 
-     public function put(Request $request, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em) {
+     public function put($id, Request $request, CategoryRepository $categoryRepository, RecipeRepository $recipeRepository, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em) {
+
 
         $jsonReceived = $request -> getContent();
+        $toModify = $recipeRepository -> find($id);
 
         try {
-            $toModify = $serializer ->deserialize($jsonReceived, Recipe::class, 'json');
+            $deserializedReceived = $serializer ->deserialize($jsonReceived, Recipe::class, 'json');
+            $categoryRecipe = $deserializedReceived -> getCategory();
+            $categoryRepo = $categoryRepository -> findOneBy(["title" => $categoryRecipe -> getTitle()]);
+            // setCategory à la nouvelle recette créée
+            $toModify -> setCategory($categoryRepo);
+            $toModify -> setTitle($deserializedReceived -> getTitle());
+            $toModify -> setContent($deserializedReceived -> getContent());
+            $toModify -> setImage($deserializedReceived -> getImage());
+            $toModify -> setFavorite($deserializedReceived -> getFavorite());
+            $toModify -> setTime($deserializedReceived -> getTime());
+            $toModify -> setDifficulty($deserializedReceived -> getDifficulty());
+            $toModify -> setPortions($deserializedReceived -> getPortions());
 
-            $errors = $validator->validate($toModify);
+
+            //return $this->json($toModify, 400);
+
+            $errors = $validator->validate($deserializedReceived);
 
             // vérifier si le validator n'a pas d'erreurs
             if(count($errors) > 0) {
