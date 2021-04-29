@@ -57,7 +57,7 @@ class ApiRecipeController extends AbstractController
     /**
      * @Route("/api/recipe/{id}", name="api_recipe_by_id", methods={"GET"})
      */
-    public function recipe(RecipeRepository $recipeRepository, $id): Response
+    public function recipe($id): Response
     {
 
         $response = new JsonResponse();
