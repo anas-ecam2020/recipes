@@ -13,6 +13,10 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class ApiCommentController extends AbstractController
 {
@@ -27,29 +31,55 @@ class ApiCommentController extends AbstractController
 
         try {
 
-            $content = $serializer -> deserialize($jsonReceived, Comment::class, 'json');
-            $content -> setCreatedAt(new \DateTime());
-            $content -> setRecipe($recipe);
+            $newComment = $serializer -> deserialize($jsonReceived, Comment::class, 'json');
+            $newComment -> setCreatedAt(new \DateTime());
+            $newComment -> setRecipe($recipe);
             
 
-            $errors = $validator -> validate($content);
+            $errors = $validator -> validate($newComment);
 
             if(count($errors) > 0) {
-                return $this->json($errors, 400);
+                $response = new JsonResponse(['message' => $errors]);
+                $response->headers->set('Content-Type', 'application/json');
+                $response->headers->set('Access-Control-Allow-Origin', '*');
+                $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+    
+                return $response;
             }
 
-            $em -> persist($content);
+            $em -> persist($newComment);
             $em -> flush();
 
-            return $this->json($content, 201, [], ['groups' =>'recipe:read']);
+            $response = new JsonResponse();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+
+            $encoders = array(new JsonEncoder());
+            $normalizers = array(new ObjectNormalizer());
+            $serializer = new Serializer($normalizers, $encoders);
+
+            $content = $serializer->serialize($newComment, 'json', [
+                'circular_reference_handler' => function ($newComment) {
+                    return $newComment->getId();
+                }
+            ]);
+    
+            $response->setContent($content);
+    
+            return $response;
 
         } catch(NotEncodableValueException $e) {
 
-            return $this->json([
-                'status' => 400,
-                'message' => $e ->getMessage()
-            ], 400);
+            $response = new JsonResponse(['status' => 400, 'message' => $e->getMessage()]);
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
 
+            return $response;
         }
         
     }
