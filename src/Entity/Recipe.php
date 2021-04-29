@@ -25,7 +25,6 @@ class Recipe
     /**
      * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="recipes", cascade={"persist"})
      * @ORM\JoinColumn(nullable=false)
-     * @Groups("recipe:read")
      */
     private $category;
 
@@ -83,7 +82,6 @@ class Recipe
 
     /**
      * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="recipe", orphanRemoval=true)
-     * @Groups("recipe:read")
      */
     private $comments;
 

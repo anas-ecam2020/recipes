@@ -11,7 +11,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ApiCategoryController extends AbstractController
 {
     /**
-     * @Route("/api/category", name="api_category_index", methods={"GET"})
+     * @Route("/api/categories", name="api_category_index", methods={"GET"})
      */
     public function index(CategoryRepository $categoryRepository): Response
     {
