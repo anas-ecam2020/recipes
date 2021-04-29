@@ -16,21 +16,18 @@ class Comment
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups("recipe:read")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\Length(min=6,  minMessage="Votre nom doit contenir au moins 6 caractères")
-     * @Groups("recipe:read")
      */
     private $author;
 
     /**
      * @ORM\Column(type="text")
      * @Assert\Length(min=6,  minMessage="Votre commentaire doit contenir au moins 10 caractères")
-     * @Groups("recipe:read")
      */
     private $content;
 

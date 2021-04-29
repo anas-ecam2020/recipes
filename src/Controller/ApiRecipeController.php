@@ -14,31 +14,43 @@ use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
+use Symfony\Component\Serializer\Normalizer\ObjectNormalizer;
+use Symfony\Component\Serializer\Serializer;
 
 class ApiRecipeController extends AbstractController
 {
     /**
      * @Route("/api/recipes", name="api_recipe_index", methods={"GET"})
      */
-    public function index(RecipeRepository $recipeRepository, NormalizerInterface $normalizer): Response
+    public function index(): Response
     {
-        $recipes = $recipeRepository->findAll();
-
-        $recipesNormalisés  = $normalizer -> normalize($recipes, null, ['groups' => 'recipe:read']);
-
-        $json = json_encode($recipesNormalisés);
-        //$recipeRepository->findAll(), 200, [], ['groups' => 'recipe:read'];
-       //$test = $this->json($recipeRepository->findAll(), 200, [], ['groups' => 'recipe:read']);
-
+        
         $response = new JsonResponse();
-        $response->setContent($json);
         $response->headers->set('Content-Type', 'application/json');
         $response->headers->set('Access-Control-Allow-Origin', '*');
         $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
         $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
-        
+
+        $em = $this->getDoctrine()->getManager();
+        $recipes = $em->getRepository(Recipe::class)->findAll();
+
+        $encoders = array(new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $content = $serializer->serialize($recipes, 'json', [
+            'circular_reference_handler' => function ($recipes) {
+                return $recipes->getId();
+            }
+        ]);
+
+        $response->setContent($content);
+
         return $response;
+    
+        //return $this->json($recipeRepository->findAll(), 200, [], ['groups' => 'recipe:read']);
+
     }
 
 
@@ -48,7 +60,30 @@ class ApiRecipeController extends AbstractController
     public function recipe(RecipeRepository $recipeRepository, $id): Response
     {
 
-        return $this->json($recipeRepository->find($id), 200, [], ['groups' => 'recipe:read']);
+        $response = new JsonResponse();
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+
+        $em = $this->getDoctrine()->getManager();
+        $recipes = $em->getRepository(Recipe::class)->find($id);
+
+        $encoders = array(new JsonEncoder());
+        $normalizers = array(new ObjectNormalizer());
+        $serializer = new Serializer($normalizers, $encoders);
+
+        $content = $serializer->serialize($recipes, 'json', [
+            'circular_reference_handler' => function ($recipes) {
+                return $recipes->getId();
+            }
+        ]);
+
+        $response->setContent($content);
+
+        return $response;
+
+        //return $this->json($recipeRepository->find($id), 200, [], ['groups' => 'recipe:read']);
     }
 
     /**
@@ -61,33 +96,63 @@ class ApiRecipeController extends AbstractController
 
         try {
 
-            $recipe = $serializer->deserialize($jsonReceived, Recipe::class, 'json');
+            $newRecipe = $serializer->deserialize($jsonReceived, Recipe::class, 'json');
 
-            $categoryValues = $recipe->getCategory();
-            $categoryTitle = $categoryValues->getTitle();
+            $categoryValue = $newRecipe->getCategory();
+            $categoryTitle = $categoryValue->getTitle();
             // extraire l'objet catégorie sur base du titre
             $category = $categoryRepository->findOneBy(['title' => $categoryTitle]);
             // setCategory à la nouvelle recette créée
-            $recipe->setCategory($category);
-            $recipe->setCreatedAt(new \DateTime());
-            $errors = $validator->validate($recipe);
-
+            $newRecipe->setCategory($category);
+            $newRecipe->setCreatedAt(new \DateTime());
+            $errors = $validator->validate($newRecipe);
 
             if (count($errors) > 0) {
-                return $this->json($errors, 400);
+
+                $response = new JsonResponse(['message' => $errors]);
+                $response->headers->set('Content-Type', 'application/json');
+                $response->headers->set('Access-Control-Allow-Origin', '*');
+                $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+    
+                return $response;
             }
 
-            $em->persist($recipe);
+            $em->persist($newRecipe);
             $em->flush();
 
-            return $this->json($recipe, 201, [], ['groups' => 'recipe:read']);
+            $response = new JsonResponse();
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+
+            $encoders = array(new JsonEncoder());
+            $normalizers = array(new ObjectNormalizer());
+            $serializer = new Serializer($normalizers, $encoders);
+
+            $content = $serializer->serialize($newRecipe, 'json', [
+                'circular_reference_handler' => function ($newRecipe) {
+                    return $newRecipe->getId();
+                }
+            ]);
+    
+            $response->setContent($content);
+    
+            return $response;
+
+            //return $this->json($recipe, 201, [], ['groups' => 'recipe:read']);
+
             // si le format json remis n'est pas correctement écrit "Syntax error"
         } catch (NotEncodableValueException $e) {
+            
+            $response = new JsonResponse(['status' => 400, 'message' => $e->getMessage()]);
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
 
-            return $this->json([
-                'status' => 400,
-                'message' => $e->getMessage()
-            ], 400);
+            return $response;
         }
     }
 
@@ -126,15 +191,20 @@ class ApiRecipeController extends AbstractController
             ], 400);
 
         }*/
-
         $toDelete = $recipeRepository->find($id);
 
         $em->remove($toDelete);
         $em->flush();
 
-        $response = "The recipe '" . $toDelete->getTitle() . "' has been successfully deleted!";
+        $message = "The recipe '" . $toDelete->getTitle() . "' has been successfully deleted!";
 
-        return $this->json($response, 200, [], ['groups' => 'recipe:read']);
+        $response = new JsonResponse(['message' => $message]);
+        $response->headers->set('Content-Type', 'application/json');
+        $response->headers->set('Access-Control-Allow-Origin', '*');
+        $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+        $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+
+        return $response;
     }
 
     /**
@@ -162,26 +232,42 @@ class ApiRecipeController extends AbstractController
             $toModify->setDifficulty($deserializedReceived->getDifficulty());
             $toModify->setPortions($deserializedReceived->getPortions());
 
-
-            //return $this->json($toModify, 400);
-
             $errors = $validator->validate($deserializedReceived);
 
             // vérifier si le validator n'a pas d'erreurs
             if (count($errors) > 0) {
-                return $this->json($errors, 400);
+
+                $response = new JsonResponse(['message' => $errors]);
+                $response->headers->set('Content-Type', 'application/json');
+                $response->headers->set('Access-Control-Allow-Origin', '*');
+                $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+                $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+
+                return $response;
             }
 
             $em->persist($toModify);
             $em->flush();
 
-            return $this->json($toModify, 200, [], ['groups' => 'recipe:read']);
+            $message = "The recipe '" . $toModify->getTitle() . "' has been successfully modified!";
+
+            $response = new JsonResponse(['message' => $message]);
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+    
+            return $response;
+
         } catch (NotEncodableValueException $e) {
 
-            return $this->json([
-                'status' => 400,
-                'message' => $e->getMessage()
-            ], 400);
+            $response = new JsonResponse(['status' => 400, 'message' => $e->getMessage()]);
+            $response->headers->set('Content-Type', 'application/json');
+            $response->headers->set('Access-Control-Allow-Origin', '*');
+            $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
+
+            return $response;
         }
     }
 }
