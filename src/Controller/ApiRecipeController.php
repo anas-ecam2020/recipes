@@ -229,9 +229,10 @@ class ApiRecipeController extends AbstractController
             $toModify->setImage($deserializedReceived->getImage());
             $toModify->setFavorite($deserializedReceived->getFavorite());
             $toModify->setTime($deserializedReceived->getTime());
+            $toModify->setCreatedAt(new \DateTime());
             $toModify->setDifficulty($deserializedReceived->getDifficulty());
             $toModify->setPortions($deserializedReceived->getPortions());
-
+            
             $errors = $validator->validate($deserializedReceived);
 
             // vérifier si le validator n'a pas d'erreurs
@@ -256,7 +257,7 @@ class ApiRecipeController extends AbstractController
             $response->headers->set('Access-Control-Allow-Origin', '*');
             $response->headers->set("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
             $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
-    
+
             return $response;
 
         } catch (NotEncodableValueException $e) {
