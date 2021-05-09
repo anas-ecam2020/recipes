@@ -14,7 +14,7 @@ use Symfony\Component\Serializer\Serializer;
 class ApiCategoryController extends AbstractController
 {
     /**
-     * @Route("/api/categories", name="api_category_index", methods={"GET"})
+     * @Route("/api/categories", name="api_category_index", methods={"GET","OPTIONS"})
      */
     public function index(): Response
     {
@@ -44,7 +44,7 @@ class ApiCategoryController extends AbstractController
     }
 
     /**
-     * @Route("/api/category/{id}", name="api_recipes_per_category", methods={"GET"})
+     * @Route("/api/category/{id}", name="api_recipes_per_category", methods={"GET","OPTIONS"})
      */
     public function category($id): Response
     {

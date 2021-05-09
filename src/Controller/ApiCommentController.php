@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Serializer;
 class ApiCommentController extends AbstractController
 {
     /**
-     * @Route("/api/comment/{id}", name="api_comment_store", methods={"POST"})
+     * @Route("/api/comment/{id}", name="api_comment_store", methods={"POST","OPTIONS"})
      */
     public function index($id, Request $request, RecipeRepository $recipeRepository, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em): Response
     {

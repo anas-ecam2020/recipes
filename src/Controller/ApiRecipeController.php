@@ -21,7 +21,7 @@ use Symfony\Component\Serializer\Serializer;
 class ApiRecipeController extends AbstractController
 {
     /**
-     * @Route("/api/recipes", name="api_recipe_index", methods={"GET"})
+     * @Route("/api/recipes", name="api_recipe_index", methods={"GET","OPTIONS"})
      */
     public function index(): Response
     {
@@ -55,7 +55,7 @@ class ApiRecipeController extends AbstractController
 
 
     /**
-     * @Route("/api/recipe/{id}", name="api_recipe_by_id", methods={"GET"})
+     * @Route("/api/recipe/{id}", name="api_recipe_by_id", methods={"GET","OPTIONS"})
      */
     public function recipe($id): Response
     {
@@ -87,7 +87,7 @@ class ApiRecipeController extends AbstractController
     }
 
     /**
-     * @Route("/api/recipe", name="api_recipe_store", methods={"POST"})
+     * @Route("/api/recipe", name="api_recipe_store", methods={"POST","OPTIONS"})
      */
     public function store(CategoryRepository $categoryRepository, Request $request, SerializerInterface $serializer, EntityManagerInterface $em, ValidatorInterface $validator)
     {
@@ -105,9 +105,9 @@ class ApiRecipeController extends AbstractController
             // setCategory à la nouvelle recette créée
             $newRecipe->setCategory($category);
             $newRecipe->setCreatedAt(new \DateTime());
-            $errors = $validator->validate($newRecipe);
+            //$errors = $validator->validate($newRecipe);
 
-            if (count($errors) > 0) {
+            /*if (count($errors) > 0) {
 
                 $response = new JsonResponse(['message' => $errors]);
                 $response->headers->set('Content-Type', 'application/json');
@@ -116,7 +116,7 @@ class ApiRecipeController extends AbstractController
                 $response->headers->set('Access-Control-Allow-Headers', 'Content-Type, Accept, Authorization, X-Requested-With', true);
     
                 return $response;
-            }
+            }*/
 
             $em->persist($newRecipe);
             $em->flush();
@@ -157,7 +157,7 @@ class ApiRecipeController extends AbstractController
     }
 
     /**
-     * @Route("/api/recipe/{id}", name="api_recipe_delete", methods={"DELETE"})
+     * @Route("/api/recipe/{id}", name="api_recipe_delete", methods={"DELETE","OPTIONS"})
      */
 
     public function delete($id, RecipeRepository $recipeRepository, EntityManagerInterface $em)
@@ -208,7 +208,7 @@ class ApiRecipeController extends AbstractController
     }
 
     /**
-     * @Route("/api/recipe/{id}", name="api_recipe_put", methods={"PUT"})
+     * @Route("/api/recipe/{id}", name="api_recipe_put", methods={"PUT","OPTIONS"})
      */
 
     public function put($id, Request $request, CategoryRepository $categoryRepository, RecipeRepository $recipeRepository, SerializerInterface $serializer, ValidatorInterface $validator, EntityManagerInterface $em)
