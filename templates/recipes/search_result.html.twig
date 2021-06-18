@@ -13,9 +13,15 @@
     {% endif %}
 {% endfor %}
 
-    {% if counter >= 1 %}
+    {% if counter > 1 %}
     <br>
         <h3>{{ counter }} résultats pour "{{ recipeResearch.title }}"</h3>
+        <br>
+        <a href="{{ path('search') }}" class="btn btn-primary">Relancer la recherche</a>
+    <br>
+    {% elseif counter == 1 %}
+        <br>
+        <h3>{{ counter }} résultat pour "{{ recipeResearch.title }}"</h3>
         <br>
         <a href="{{ path('search') }}" class="btn btn-primary">Relancer la recherche</a>
     <br>

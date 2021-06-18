@@ -39,7 +39,6 @@ class Recipe
     /**
      * @ORM\Column(type="text")
      * @Assert\Length(min=10,  minMessage="Votre description doit contenir au moins 10 caractères")
-     * @Assert\NotBlank(message="Le contenu est obligatoire")
      * @Groups("recipe:read")
      */
     private $content;
